@@ -46,7 +46,7 @@ public class TransactionController {
                     user.getId()
             );
 
-            transactionService.saveTransaction(transaction);
+            transactionService.depositTransaction(transaction);
             System.out.println("Deposit completed successfully!");
         } else {
             System.out.println("Account not found!");
@@ -54,6 +54,40 @@ public class TransactionController {
     }
 
     public static void withdraw() {
+        User user = AuthController.getSessionUser();
+
+        if (user == null) {
+            System.out.println("No user logged in!");
+            return;
+        }
+
+        System.out.println("Enter your AccountNumber : ");
+        String accountNumber = scanner.nextLine();
+        Account account = accountService.findByAccountNumber(accountNumber);
+
+        if (account != null) {
+            System.out.println("Enter your balance withdraw : ");
+            String balanceInput = scanner.nextLine();
+            BigDecimal amount = new BigDecimal(balanceInput);
+
+            Transaction.Type type = Transaction.Type.WITHDRAW;
+            Transaction.Status status = Transaction.Status.SETTLED;
+
+            Transaction transaction = new Transaction(
+                    amount,
+                    type,
+                    status,
+                    account.getId(),
+                    null,
+                    null,
+                    user.getId()
+            );
+
+            transactionService.withdrawTransaction(transaction);
+            System.out.println("Withdraw completed successfully!");
+        } else {
+            System.out.println("Account not found!");
+        }
 
     }
 }

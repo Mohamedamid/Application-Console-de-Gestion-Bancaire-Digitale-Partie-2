@@ -1,11 +1,12 @@
 package com.model;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 public class Account {
     private UUID id;
     private String accountNumber;
-    private double balance;
+    private BigDecimal balance;
     private Type type;
     private UUID clientId;
     private boolean status;
@@ -17,7 +18,7 @@ public class Account {
     public Account(Type type,UUID clientId) {
         this.id = UUID.randomUUID();
         this.accountNumber = "MA64" + (int)(Math.random() * 1000000);
-        this.balance = 0.0;
+        this.balance = BigDecimal.ZERO;
         this.type = type;
         this.clientId = clientId;
         this.status = true;
@@ -39,11 +40,11 @@ public class Account {
         this.accountNumber = accountNumber;
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 

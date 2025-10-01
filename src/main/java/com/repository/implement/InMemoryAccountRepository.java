@@ -21,7 +21,7 @@ public class InMemoryAccountRepository implements AccountRepository {
 
             ps.setObject(1, account.getId());
             ps.setString(2, account.getAccountNumber());
-            ps.setDouble(3, account.getBalance());
+            ps.setBigDecimal(3, account.getBalance());
             ps.setString(4, account.getType().name());
             ps.setObject(5, account.getClientId());
             ps.setBoolean(6, account.isStatus());
@@ -67,7 +67,7 @@ public class InMemoryAccountRepository implements AccountRepository {
         );
         account.setId(rs.getObject("id", UUID.class));
         account.setAccountNumber(rs.getString("account_number"));
-        account.setBalance(rs.getDouble("balance"));
+        account.setBalance(rs.getBigDecimal("balance"));
         account.setStatus(rs.getBoolean("status"));
         return account;
     }
@@ -101,7 +101,7 @@ public class InMemoryAccountRepository implements AccountRepository {
                 UUID id = rs.getObject("id", UUID.class);
                 UUID clientId = rs.getObject("client_id", UUID.class);
                 Account.Type type = Account.Type.valueOf(rs.getString("type"));
-                double balance = rs.getDouble("balance");
+                BigDecimal balance = rs.getBigDecimal("balance");
                 boolean status = rs.getBoolean("status");
                 String accNum = rs.getString("account_number");
 
@@ -151,7 +151,7 @@ public class InMemoryAccountRepository implements AccountRepository {
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, account.getAccountNumber());
-            ps.setDouble(2, account.getBalance());
+            ps.setBigDecimal(2, account.getBalance());
             ps.setString(3, account.getType().name());
             ps.setObject(4, account.getClientId());
             ps.setBoolean(5, account.isStatus());
