@@ -21,7 +21,8 @@ public class MenuTeller {
             System.out.println("5. Deposit Money");
             System.out.println("6. Withdraw Money");
             System.out.println("7. Internal Transfer");
-            System.out.println("8. Credit Request");
+            System.out.println("8. External Transfer");
+            System.out.println("9. Credit Request");
             System.out.println("0. Exit");
             System.out.print("Enter your choice: ");
 
@@ -48,9 +49,12 @@ public class MenuTeller {
                     TransactionController.withdraw();
                     break;
                 case 7:
-                    System.out.println("Processing Internal Transfer...");
+                    TransactionController.transferIn();
                     break;
                 case 8:
+                    TransactionController.transferOut();
+                    break;
+                case 9:
                     System.out.println("Processing Credit Request...");
                     break;
                 case 0:

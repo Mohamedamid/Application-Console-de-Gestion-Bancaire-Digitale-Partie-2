@@ -66,4 +66,8 @@ public class InMemoryTransactionService implements TransactionService {
         return transaction;
     }
 
+    public Transaction save(Transaction transaction) {
+        return transaction;
+    }
+
 }
