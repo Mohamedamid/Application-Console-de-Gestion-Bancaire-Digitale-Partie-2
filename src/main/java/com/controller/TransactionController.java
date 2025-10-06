@@ -99,11 +99,23 @@ public class TransactionController {
         }
 
         System.out.println("Enter source account number (from which to transfer): ");
-        String sourceAccountNumber = scanner.nextLine();
+        String sourceAccountNumber = scanner.nextLine().trim();
+
+        if (sourceAccountNumber.isEmpty()) {
+            System.out.println("Source account number cannot be empty!");
+            return;
+        }
+
         Account source = accountService.findByAccountNumber(sourceAccountNumber);
 
         System.out.println("Enter target account number (to which to transfer): ");
-        String targetAccountNumber = scanner.nextLine();
+        String targetAccountNumber = scanner.nextLine().trim();
+
+        if (targetAccountNumber.isEmpty()) {
+            System.out.println("Target account number cannot be empty!");
+            return;
+        }
+
         Account target = accountService.findByAccountNumber(targetAccountNumber);
 
         if (source == null || target == null) {
@@ -117,7 +129,12 @@ public class TransactionController {
         }
 
         System.out.println("Enter transfer amount: ");
-        String amountInput = scanner.nextLine();
+        String amountInput = scanner.nextLine().trim();
+
+        if (amountInput.isEmpty()) {
+            System.out.println("Amount cannot be empty!");
+            return;
+        }
 
         try {
             BigDecimal amount = new BigDecimal(amountInput);
@@ -127,16 +144,16 @@ public class TransactionController {
                 return;
             }
 
-            if (amount.compareTo(source.getBalance()) > 0) {
-                System.out.println("Insufficient balance!");
+            if (!hasSufficientBalance(source, amount)) {
+                System.out.println("Insufficient balance! Available: " + source.getBalance());
                 return;
             }
 
             Transaction debitTx = new Transaction(
-                    amount.negate(), // negative for debit
+                    amount.negate(),
                     Transaction.Type.TRANSFER_OUT,
                     Transaction.Status.SETTLED,
-                    null,
+                    source.getId(),
                     source.getId(),
                     target.getId(),
                     user.getId()
@@ -146,30 +163,39 @@ public class TransactionController {
                     amount,
                     Transaction.Type.TRANSFER_IN,
                     Transaction.Status.SETTLED,
-                    null,
+                    target.getId(),
                     source.getId(),
                     target.getId(),
                     user.getId()
             );
 
-            transactionService.save(debitTx);
-            // transactionService.save(creditTx);
-
-            source.setBalance(source.getBalance().subtract(amount));
-            target.setBalance(target.getBalance().add(amount));
-
-            // accountService.update(source);
-            // accountService.update(target);
+            transactionService.processTransfer(debitTx, creditTx);
 
             System.out.println("Transfer completed successfully!");
+            System.out.println("New source balance: " + source.getBalance());
+            System.out.println("New target balance: " + target.getBalance());
 
         } catch (NumberFormatException e) {
-            System.out.println("Invalid amount entered!");
+            System.out.println("Invalid amount format! Please enter a valid number.");
+        } catch (Exception e) {
+            System.out.println("Error during transfer: " + e.getMessage());
         }
     }
 
-    public static void transferOut(){
+    private static boolean hasSufficientBalance(Account account, BigDecimal amount) {
 
+        if (account.getType() == Account.Type.CREDIT) {
+            return account.getBalance().add(getCreditLimit(account)).compareTo(amount) >= 0;
+        } else {
+            return account.getBalance().compareTo(amount) >= 0;
+        }
     }
 
+    private static BigDecimal getCreditLimit(Account account) {
+        return new BigDecimal("1000.00");
+    }
+
+    public static void transferOut(){
+        System.out.println("External transfer functionality not yet implemented.");
+    }
 }

@@ -1,16 +1,16 @@
 package com.service.implement;
 
 import com.model.Account;
-import com.model.Client;
+
 import com.repository.AccountRepository;
-import com.repository.implement.InMemoryAccountRepository;
+import com.repository.RepositoryFactory;
 import com.service.AccountService;
 
 import java.util.List;
 import java.util.UUID;
 
 public class InMemoryAccountService implements AccountService {
-    private final AccountRepository accountRepository = new InMemoryAccountRepository();
+    private final AccountRepository accountRepository = RepositoryFactory.accountRepository;
 
 
     public Account createAccount(Account.Type type, UUID clientId) {

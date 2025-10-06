@@ -70,4 +70,13 @@ public class AccountController {
         }
         MenuTeller.showTellerMenu(null);
     }
+
+    public static void activeAccount() {
+
+    }
+
+    public static void desactiveAccount() {
+
+    }
+
 }
